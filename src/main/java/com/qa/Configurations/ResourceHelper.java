@@ -10,11 +10,11 @@ public class ResourceHelper {
 		
 	}
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		
-        String path=ResourceHelper.getResourcepath("/src/main/java/com/qa/config/config.properties");
+        String path=ResourceHelper.getResourcepath("/src/main/java/com/qa/data/users.json");
         System.out.println(path);
-	}*/
+	}
 	
 	
 

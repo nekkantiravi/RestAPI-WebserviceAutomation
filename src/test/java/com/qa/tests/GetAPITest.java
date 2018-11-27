@@ -14,9 +14,9 @@ import org.testng.annotations.Test;
 
 import com.qa.base.TestBase;
 import com.qa.client.RestClient;
+import com.qa.util.TestUtil;
 
 public class GetAPITest extends TestBase {
-	
 
 	TestBase testbase;
 	String serviceurl;
@@ -24,33 +24,55 @@ public class GetAPITest extends TestBase {
 	String url;
 	RestClient restclient;
 	CloseableHttpResponse closeableHttpResponse;
-	
+
 	@BeforeMethod
-	public void setUp(){
+	public void setUp() {
 		testbase = new TestBase();
 		serviceurl = prop.getProperty("URL");
 		apiurl = prop.getProperty("serviceURL");
 		url = serviceurl + apiurl;
-         
+
 	}
 
 	@Test
 
 	public void getAPITest() throws ClientProtocolException, IOException {
 		restclient = new RestClient();
-		closeableHttpResponse=restclient.get(url);
+		closeableHttpResponse = restclient.get(url);
 
 		// a.status code
 		int statuscode = closeableHttpResponse.getStatusLine().getStatusCode();
 		System.out.println("Status code------>" + statuscode);
-		
-		Assert.assertEquals(statuscode,RESPONSE_STATUS_CODE_200,"status code is not 200");
 
-		// b.json string:	
+		Assert.assertEquals(statuscode, RESPONSE_STATUS_CODE_200, "status code is not 200");
+
+		// b.json string:
 
 		String responsestring = EntityUtils.toString(closeableHttpResponse.getEntity(), "UTF-8");
 		JSONObject responsejson = new JSONObject(responsestring);
 		System.out.println("Response json from API------->" + responsejson);
+
+		// single value assertion:
+		// per_page
+
+		String perpagevalue = TestUtil.getValueByJPath(responsejson, "/per_page");
+		System.out.println("Value of per page is: " + perpagevalue);
+		Assert.assertEquals(Integer.parseInt(perpagevalue), 3);
+
+		// Total
+
+		String totalvalue = TestUtil.getValueByJPath(responsejson, "/total");
+		System.out.println("Value of total is: " + totalvalue);
+		Assert.assertEquals(Integer.parseInt(totalvalue), 12);
+
+		// get the value from json array
+
+		String lastname = TestUtil.getValueByJPath(responsejson, "/data[0]/last_name");
+		Assert.assertEquals(lastname, "Holt");
+
+		System.out.println("value of lastname: " + lastname);
+		String id = TestUtil.getValueByJPath(responsejson, "/data[0]/id");
+		Assert.assertEquals(Integer.parseInt(id), 4);
 
 		// c.All headers
 		Header[] headersArrary = closeableHttpResponse.getAllHeaders();
