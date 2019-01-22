@@ -55,7 +55,7 @@ public class PostAPITest extends TestBase {
 		// object to json string
 		String usersjsonstring = mapper.writeValueAsString(users);
 		                         
-		System.out.println(usersjsonstring);
+		System.out.println("Object to json o/p :" +usersjsonstring);
 
 		closablehttpresponse = restclient.post(url, usersjsonstring); // call the API
 
